@@ -14,7 +14,7 @@ Schema::defaultStringLength(191);
 To install project composer should be installed in your system (assuming using windows). Then
 
 ```
-laravel new LaraWebDev2507
+git clone git@github.com:rejoan/LaraWebDev2507.git && cd LaraWebDev2507
 php artisan install:api
 php artisan migrate
 ```
