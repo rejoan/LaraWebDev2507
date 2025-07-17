@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 
 class ArticleController extends Controller {
@@ -17,6 +18,45 @@ class ArticleController extends Controller {
       $articles = Article::where(['created_by' => $user->id])->get();
       $this->apiArray['data'] = $articles;
       $this->apiArray['message'] = 'Articles created by you';
+      $this->apiArray['errorCode'] = 0;
+      $this->apiArray['error'] = false;
+      return response()->json($this->apiArray, 200);
+    } catch (Exception $e) {
+      $this->apiArray['message'] = $e->getMessage();
+      $this->apiArray['errorCode'] = 1;
+      $this->apiArray['error'] = true;
+      $this->apiArray['data'] = null;
+      return response()->json($this->apiArray, 200);
+    }
+  }
+
+  /**
+   * all articles public
+   * @param Request $request
+   * @return type
+   */
+  public function list(Request $request) {
+    try {
+      $cond = [];
+      $catID = 'none';
+      if(!ctype_digit($request->input('category'))){
+        
+        $category = Category::where(['name' => $request->input('category')])->first();
+        
+        if(!empty($category)){
+          $catID = (int) $category->id;
+        }
+      }
+      if(is_numeric($catID)){
+        $cond['category_id'] = $catID;
+      }
+      if(is_numeric($request->input('user'))){
+        $cond['created_by'] = $request->input('user');
+      }
+      
+      $articles = Article::where($cond)->get();
+      $this->apiArray['data'] = $articles;
+      $this->apiArray['message'] = 'Articles list';
       $this->apiArray['errorCode'] = 0;
       $this->apiArray['error'] = false;
       return response()->json($this->apiArray, 200);
@@ -65,6 +105,40 @@ class ArticleController extends Controller {
       $this->apiArray['message'] = 'Something is wrong, please try after some time' . $e->getMessage();
       $this->apiArray['errorCode'] = 3;
       $this->apiArray['error'] = true;
+      return response()->json($this->apiArray, 200);
+    }
+  }
+
+  /**
+   * show public article
+   * @param string $id
+   * @return type
+   */
+  public function showPublic(string $id) {
+    try {
+      if (!ctype_digit($id)) {
+        $this->apiArray['message'] = 'Please provide id';
+        $this->apiArray['errorCode'] = 1;
+        $this->apiArray['error'] = true;
+        return response()->json($this->apiArray, 200);
+      }
+      $article = Article::where(['id' => $id])->first();
+      if (empty($article)) {
+        $this->apiArray['message'] = 'Not article found';
+        $this->apiArray['errorCode'] = 2;
+        $this->apiArray['error'] = true;
+        return response()->json($this->apiArray, 401);
+      }
+      $this->apiArray['data'] = $article;
+      $this->apiArray['message'] = 'Requested public article';
+      $this->apiArray['errorCode'] = 3;
+      $this->apiArray['error'] = false;
+      return response()->json($this->apiArray, 200);
+    } catch (Exception $e) {
+      $this->apiArray['message'] = $e->getMessage();
+      $this->apiArray['errorCode'] = 4;
+      $this->apiArray['error'] = true;
+      $this->apiArray['data'] = null;
       return response()->json($this->apiArray, 200);
     }
   }

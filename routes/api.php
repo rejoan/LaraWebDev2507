@@ -6,6 +6,9 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 
 Route::post('auth/login', [AuthController::class, 'createToken']);
+Route::get('/articles', [ArticleController::class, 'list']);
+Route::get('/articles/public/{id}', [ArticleController::class, 'showPublic']);
+
 Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
   Route::get('me', [AuthController::class, 'authUser']);
   Route::post('logout', [AuthController::class, 'signOut']);
