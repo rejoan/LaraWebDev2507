@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller {
 
@@ -35,14 +34,14 @@ class AuthController extends Controller {
       );
       if ($validator->fails()) {
         $this->apiArray['message'] = $validator->messages()->first();
-        $this->apiArray['errorCode'] = 2;
+        $this->apiArray['errorCode'] = 1;
         $this->apiArray['error'] = true;
         return response()->json($this->apiArray, 200);
       }
       $user = User::where(['email' => $inputs['email']])->first();
       if (empty($user)) {
         $this->apiArray['message'] = 'User does not match with our record.';
-        $this->apiArray['errorCode'] = 3;
+        $this->apiArray['errorCode'] = 2;
         $this->apiArray['error'] = true;
         $this->apiArray['data'] = null;
         return response()->json($this->apiArray, 401);
@@ -53,7 +52,7 @@ class AuthController extends Controller {
       }
       if ($check == false) {
         $this->apiArray['message'] = 'Password does not match with our record.';
-        $this->apiArray['errorCode'] = 4;
+        $this->apiArray['errorCode'] = 3;
         $this->apiArray['error'] = true;
         $this->apiArray['data'] = null;
         return response()->json($this->apiArray, 401);
@@ -69,7 +68,7 @@ class AuthController extends Controller {
       );
       $this->apiArray['data'] = $data;
       $this->apiArray['message'] = $message;
-      $this->apiArray['errorCode'] = 0;
+      $this->apiArray['errorCode'] = 4;
       $this->apiArray['error'] = false;
       return response()->json($this->apiArray, 200);
     } catch (Exception $e) {
@@ -86,7 +85,7 @@ class AuthController extends Controller {
    */
   public function authUser(Request $request) {
     $this->apiArray['message'] = 'Auth Success';
-    $this->apiArray['errorCode'] = 0;
+    $this->apiArray['errorCode'] = 1;
     $this->apiArray['error'] = false;
     $this->apiArray['data'] = ['email' => $request->user()->email,'name' => $request->user()->name];
     return response()->json($this->apiArray, 200);
@@ -100,12 +99,12 @@ class AuthController extends Controller {
       $user = $request->user();
       $user->tokens()->delete();
       $this->apiArray['message'] = 'Logout Success & Token deleted';
-      $this->apiArray['errorCode'] = 0;
+      $this->apiArray['errorCode'] = 1;
       $this->apiArray['error'] = false;
       return response()->json($this->apiArray, 200);
     } catch (Exception $e) {
       $this->apiArray['message'] = $e->getMessage();
-      $this->apiArray['errorCode'] = 3;
+      $this->apiArray['errorCode'] = 2;
       $this->apiArray['error'] = true;
       $this->apiArray['data'] = null;
       return response()->json($this->apiArray, 200);
