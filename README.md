@@ -93,4 +93,4 @@ parameters
 ------------
 per_min:3 (Default 5)
 
-#Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit)
+# Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit)
