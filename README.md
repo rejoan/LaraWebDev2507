@@ -20,6 +20,8 @@ php artisan migrate
 
 //for some demo data
 php artisan db:seed
+
+composer require nesbot/carbon
 ```
 
 ### Example Usage

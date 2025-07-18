@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HitController;
 
 Route::post('auth/login', [AuthController::class, 'createToken']);
 Route::get('/articles', [ArticleController::class, 'list']);
 Route::get('/articles/public/{id}', [ArticleController::class, 'showPublic']);
+Route::post('set/limit/minute', [HitController::class, 'perMin']);
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
   Route::get('me', [AuthController::class, 'authUser']);

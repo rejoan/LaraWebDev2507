@@ -6,8 +6,34 @@ use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Hit;
+use App\Models\Limit;
+use Carbon\Carbon;
 
 class ArticleController extends Controller {
+
+  /**
+   * rate limit
+   * @param type $user_id
+   * @return type
+   */
+  private function hitDB($userID) {
+    $startDate = Carbon::now()->subMinute(1)->format('Y-m-d H:i:s');
+    $endDate = Carbon::now()->format('Y-m-d H:i:s');
+    $consumed = Hit::where(['user_id' => $userID])->whereBetween('created_at', [$startDate, $endDate])->count();
+    $limit = Limit::first();
+    if (empty($limit)) {
+      $perMinLimit = 5;
+    }
+    $perMinLimit = $limit->per_min;
+    if ($consumed > $perMinLimit) {
+      $this->apiArray['error'] = true;
+      return response()->json($this->apiArray, 200);
+    }
+    $hit = new Hit;
+    $hit->user_id = $userID;
+    $hit->save();
+  }
 
   /**
    * Display a listing of the resource.
@@ -15,6 +41,16 @@ class ArticleController extends Controller {
   public function index(Request $request) {
     try {
       $user = $request->user();
+      $limitExeed = $this->hitDB($user->id);
+      $limitB = json_decode(json_encode($limitExeed), true);
+      if (isset($limitB['original']['error'])) {
+        if ($limitB['original']['error']) {
+          $this->apiArray['message'] = 'API rate limit exceeded. Try again later';
+          $this->apiArray['errorCode'] = 2;
+          $this->apiArray['error'] = true;
+          return response()->json($this->apiArray, 200);
+        }
+      }
       $articles = Article::where(['created_by' => $user->id])->get();
       $this->apiArray['data'] = $articles;
       $this->apiArray['message'] = 'Articles created by you';
@@ -39,21 +75,21 @@ class ArticleController extends Controller {
     try {
       $cond = [];
       $catID = 'none';
-      if(!ctype_digit($request->input('category'))){
-        
+      if (!ctype_digit($request->input('category'))) {
+
         $category = Category::where(['name' => $request->input('category')])->first();
-        
-        if(!empty($category)){
+
+        if (!empty($category)) {
           $catID = (int) $category->id;
         }
       }
-      if(is_numeric($catID)){
+      if (is_numeric($catID)) {
         $cond['category_id'] = $catID;
       }
-      if(is_numeric($request->input('user'))){
+      if (is_numeric($request->input('user'))) {
         $cond['created_by'] = $request->input('user');
       }
-      
+
       $articles = Article::where($cond)->get();
       $this->apiArray['data'] = $articles;
       $this->apiArray['message'] = 'Articles list';
@@ -74,6 +110,17 @@ class ArticleController extends Controller {
    */
   public function store(Request $request) {
     try {
+            $user = $request->user();
+      $limitExeed = $this->hitDB($user->id);
+      $limitB = json_decode(json_encode($limitExeed), true);
+      if (isset($limitB['original']['error'])) {
+        if ($limitB['original']['error']) {
+          $this->apiArray['message'] = 'API rate limit exceeded. Try again later';
+          $this->apiArray['errorCode'] = 2;
+          $this->apiArray['error'] = true;
+          return response()->json($this->apiArray, 200);
+        }
+      }
       $inputs = $request->all();
       $validator = Validator::make(
               $inputs,
@@ -94,7 +141,6 @@ class ArticleController extends Controller {
       $article->slug = str_replace([' ', '-', ','], '_', $request->title);
       $article->body = $request->body;
       $article->category_id = $request->category_id;
-      $user = $request->user();
       $article->created_by = $user->id;
       $article->save();
       $this->apiArray['message'] = 'Article created';
@@ -148,6 +194,17 @@ class ArticleController extends Controller {
    */
   public function show(string $id, Request $request) {
     try {
+      $user = $request->user();
+      $limitExeed = $this->hitDB($user->id);
+      $limitB = json_decode(json_encode($limitExeed), true);
+      if (isset($limitB['original']['error'])) {
+        if ($limitB['original']['error']) {
+          $this->apiArray['message'] = 'API rate limit exceeded. Try again later';
+          $this->apiArray['errorCode'] = 2;
+          $this->apiArray['error'] = true;
+          return response()->json($this->apiArray, 200);
+        }
+      }
       if (!ctype_digit($id)) {
         $this->apiArray['message'] = 'Please provide id';
         $this->apiArray['errorCode'] = 1;
@@ -155,7 +212,7 @@ class ArticleController extends Controller {
         return response()->json($this->apiArray, 200);
       }
 
-      $user = $request->user();
+
       $article = Article::where(['created_by' => $user->id, 'id' => $id])->first();
       if (empty($article)) {
         $this->apiArray['message'] = 'Not article found';
@@ -223,6 +280,18 @@ class ArticleController extends Controller {
    */
   public function destroy(string $id, Request $request) {
     try {
+      $user = $request->user();
+      $limitExeed = $this->hitDB($user->id);
+      $limitB = json_decode(json_encode($limitExeed), true);
+      if (isset($limitB['original']['error'])) {
+        if ($limitB['original']['error']) {
+          $this->apiArray['message'] = 'API rate limit exceeded. Try again later';
+          $this->apiArray['errorCode'] = 2;
+          $this->apiArray['error'] = true;
+          return response()->json($this->apiArray, 200);
+        }
+      }
+
       if (!ctype_digit($id)) {
         $this->apiArray['message'] = 'id should be integer';
         $this->apiArray['errorCode'] = 1;
@@ -230,7 +299,6 @@ class ArticleController extends Controller {
         return response()->json($this->apiArray, 200);
       }
 
-      $user = $request->user();
       $article = Article::where(['created_by' => $user->id, 'id' => $id])->first();
       if (empty($article)) {
         $this->apiArray['message'] = 'Not article found';
