@@ -32,13 +32,18 @@ Then send *POST* request to
 
 ```
 http://127.0.0.1:8000/api/auth/login
+```
 
 parameters
 -------------
+```
 email:rejoanul.alam@gmail.com, password:123456
+```
 
 response data
 ---------------
+
+```
 {
     "error": false,
     "message": "Login sucessfully",
