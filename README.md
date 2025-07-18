@@ -18,7 +18,7 @@ git clone git@github.com:rejoan/LaraWebDev2507.git && cd LaraWebDev2507
 php artisan install:api
 php artisan migrate
 
-//for some demo data
+//DB Seeder for some demo data (user & category)
 php artisan db:seed
 
 composer require nesbot/carbon
@@ -93,4 +93,4 @@ parameters
 ------------
 per_min:3 (Default 5)
 
-# Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit)
+## Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit
