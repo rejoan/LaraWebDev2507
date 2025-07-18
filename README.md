@@ -25,7 +25,7 @@ composer require nesbot/carbon
 ```
 
 ### Example Usage
-First run the app through CLI
+First run the app through CLI (goto project root directory through *cd*)
 
 ```
 php artisan serve
