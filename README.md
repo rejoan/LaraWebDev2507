@@ -82,3 +82,14 @@ response data
         },
 ....
 ```
+
+## Set API rate limit
+
+```
+http://127.0.0.1:8000/api/set/limit/minute
+```
+
+parameters
+------------
+per_min:3
+Default 5
