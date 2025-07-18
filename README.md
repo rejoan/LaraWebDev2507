@@ -37,7 +37,8 @@ http://127.0.0.1:8000/api/auth/login
 parameters
 -------------
 ```
-email:rejoanul.alam@gmail.com, password:123456
+email:rejoanul.alam@gmail.com
+password:123456
 ```
 
 response data
@@ -53,4 +54,29 @@ response data
         "token": "HGGa5UMlBftrNjMkPgWBx8LjY2L4uj7vGmTiqVPhecd0df0f"
     }
 }
+```
+
+Now using above returned token you may use other endpoints. For example *GET* request to following endpoint will return article list created by loggedin user
+
+```
+http://127.0.0.1:8000/api/articles/mine
+```
+response data
+--------------
+
+```
+{
+    "data": [
+        {
+            "id": 1,
+            "title": "article 1 updated",
+            "slug": "article_1_updated",
+            "body": "body updated1",
+            "status": "draft",
+            "category_id": 1,
+            "created_by": 1,
+            "created_at": "2025-07-17T17:12:26.000000Z",
+            "updated_at": "2025-07-17T18:02:27.000000Z"
+        },
+....
 ```
