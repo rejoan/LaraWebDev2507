@@ -91,5 +91,4 @@ http://127.0.0.1:8000/api/set/limit/minute
 
 parameters
 ------------
-per_min:3
-Default 5
+per_min:3 (Default 5, daily limit & category CRUD not created because same things created in Article CRUD & minute limit)
