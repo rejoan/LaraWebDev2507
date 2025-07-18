@@ -85,6 +85,8 @@ response data
 
 ## Set API rate limit
 
+*POST* request to following endpoint
+
 ```
 http://127.0.0.1:8000/api/set/limit/minute
 ```
