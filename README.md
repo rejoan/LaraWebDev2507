@@ -16,8 +16,14 @@ To install project composer should be installed in your system (assuming using w
 ```
 git clone git@github.com:rejoan/LaraWebDev2507.git && cd LaraWebDev2507
 composer install
-php artisan install:api
+```
+
+### Rename *.env.example* to *.env* and create a DB *larawebdev2507* and then
+
+```
 php artisan migrate
+php artisan install:api
+```
 
 //DB Seeder for some demo data (user & category)
 php artisan db:seed
