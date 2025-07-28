@@ -18,7 +18,7 @@ git clone git@github.com:rejoan/LaraWebDev2507.git && cd LaraWebDev2507
 composer install
 ```
 
-### Rename *.env.example* to *.env* and create a DB "larawebdev2507" and then
+> Rename `.env.example` to `.env` and create a DB `larawebdev2507` and then
 
 ```
 php artisan migrate
