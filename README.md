@@ -41,10 +41,8 @@ Then send *POST* request to
 
 ```
 http://127.0.0.1:8000/api/auth/login
-```
 
-*parameters*
-```
+*params*
 email:rejoanul.alam@gmail.com
 password:123456
 ```
