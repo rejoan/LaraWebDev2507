@@ -43,8 +43,7 @@ Then send *POST* request to
 http://127.0.0.1:8000/api/auth/login
 ```
 
-parameters
--------------
+*parameters*
 ```
 email:rejoanul.alam@gmail.com
 password:123456
@@ -98,8 +97,9 @@ response data
 http://127.0.0.1:8000/api/set/limit/minute
 ```
 
-parameters
-------------
+***parameters***
+
 per_min:3 (Default 5)
 
-## Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit
+> [!NOTE]
+> Daily API RATE limit & category CRUD not created because same things created in Article CRUD & minute limit
