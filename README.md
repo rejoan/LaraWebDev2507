@@ -23,7 +23,8 @@ composer install
 ```
 php artisan migrate
 php artisan install:api
-//DB Seeder for some demo data (user & category)
+
+> DB Seeder for some demo data (user & category)
 php artisan db:seed
 
 composer require nesbot/carbon
