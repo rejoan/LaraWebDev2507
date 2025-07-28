@@ -15,6 +15,7 @@ To install project composer should be installed in your system (assuming using w
 
 ```
 git clone git@github.com:rejoan/LaraWebDev2507.git && cd LaraWebDev2507
+composer install
 php artisan install:api
 php artisan migrate
 
